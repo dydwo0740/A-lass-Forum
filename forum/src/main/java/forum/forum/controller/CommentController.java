@@ -7,9 +7,7 @@ import forum.forum.repository.CommentRepository;
 import forum.forum.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,4 +26,21 @@ public class CommentController {
         commentRepository.save(comment);
         return "redirect:/contents/" + String.valueOf(id);
     }
+
+    @PostMapping("/comments/delete/{contentId}/{commentId}")
+    public String deleteComment(@PathVariable("contentId") Long contentId, @PathVariable("commentId") Long commentId) {
+        commentRepository.deleteById(commentId);
+        return "redirect:/contents/" + String.valueOf(contentId);
+    }
+
+    @PostMapping("/comments/update/{contentId}/{commentId}")
+    public String updateComment(@ModelAttribute("comment") CommentDto commentDto,
+                                @PathVariable("contentId") Long contentId,
+                                @PathVariable("commentId") Long commentId) {
+        commentRepository.updateContentAndWriterById(commentId, commentDto.getContent(), commentDto.getWriter());
+
+        // redirect:/contents/{contentId}로 수정
+        return "redirect:/contents/" + contentId;
+    }
+
 }
