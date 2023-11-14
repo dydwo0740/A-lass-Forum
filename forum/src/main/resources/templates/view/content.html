@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Example Template</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+
+    span {
+      font-weight: bold;
+      color: #007BFF;
+    }
+  </style>
+</head>
+<body>
+
+<h1>게시글</h1>
+<p>제목: <span th:text="${content.title}"></span></p>
+<p>내용: <span th:text="${content.content}"></span></p>
+
+<!-- 댓글 목록 -->
+<div class="comment-list">
+  <!-- Thymeleaf 반복문 -->
+  <div th:each="comment : ${comments}" class="comment">
+    <p th:text="${comment.writer}"></p>
+    <p th:text="${comment.content}"></p>
+  </div>
+</div>
+
+<form th:action="@{'/comments/new/' + ${content.id}}" method="post" class="comment-form" th:object="${comment}">
+  <label for="content">댓글 작성:</label>
+  <textarea id="content" name="content" th:field="*{content}" required></textarea>
+  <button type="submit">저장</button>
+</form>
+</body>
+</html>
