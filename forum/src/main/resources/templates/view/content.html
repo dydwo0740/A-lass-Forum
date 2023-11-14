@@ -1,30 +1,95 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Example Template</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example Template</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
 
-    h1 {
-      color: #333;
-      text-align: center;
-    }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
 
-    p {
-      margin-bottom: 10px;
-    }
+        p {
+            margin-bottom: 10px;
+        }
 
-    span {
-      font-weight: bold;
-      color: #007BFF;
-    }
-  </style>
+        span {
+            font-weight: bold;
+            color: #007BFF;
+        }
+
+        .comment-list {
+            margin-top: 20px;
+        }
+
+        .comment {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        /* 링크 스타일 */
+        a.button {
+            display: inline-block;
+            background-color: #28a745; /* 밝은 녹색 */
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        a.button:hover {
+            background-color: #218838; /* 어두운 녹색 */
+        }
+
+        /* 삭제 버튼 스타일 */
+        .comment-form form:nth-child(odd) button[type="submit"] {
+            background-color: #dc3545; /* 빨간색 */
+            color: #fff;
+        }
+
+        /* 수정 버튼 스타일 */
+        .comment-form form:nth-child(even) button[type="submit"] {
+            background-color: #dc3545; /* 빨간색 */
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
 
@@ -34,17 +99,39 @@
 
 <!-- 댓글 목록 -->
 <div class="comment-list">
-  <!-- Thymeleaf 반복문 -->
-  <div th:each="comment : ${comments}" class="comment">
-    <p th:text="${comment.writer}"></p>
-    <p th:text="${comment.content}"></p>
-  </div>
+    <!-- Thymeleaf 반복문 -->
+    <div th:each="comment : ${comments}" class="comment">
+        <p th:text="${comment.writer}"></p>
+        <p th:text="${comment.content}"></p>
+
+        <form th:action="@{/comments/delete/{contentId}/{commentId}(contentId=${content.id}, commentId=${comment.id})}"
+              th:method="post">
+            <input type="hidden" name="_method" value="delete"/>
+            <button type="submit" onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</button>
+        </form>
+
+        <form th:action="@{/comments/update/{contentId}/{commentId}(contentId=${content.id}, commentId=${comment.id})}" th:object="${comment}" method="post">
+            <input type="hidden" name="_method" value="put"/>
+            <div>
+                <label for="writer">작성자:</label>
+                <input type="text" id="writer" name="writer" th:field="*{writer}" required/>
+            </div>
+            <div>
+                <label for="content">내용:</label>
+                <textarea id="content" name="content" th:field="*{content}" required></textarea>
+            </div>
+            <button type="submit" onclick="return confirm('정말로 수정하시겠습니까?')">수정 완료</button>
+        </form>
+
+    </div>
 </div>
 
 <form th:action="@{'/comments/new/' + ${content.id}}" method="post" class="comment-form" th:object="${comment}">
-  <label for="content">댓글 작성:</label>
-  <textarea id="content" name="content" th:field="*{content}" required></textarea>
-  <button type="submit">저장</button>
+    <label for="content">댓글 작성:</label>
+    <textarea id="content" name="content" th:field="*{content}" required></textarea>
+    <button type="submit">저장</button>
 </form>
+
+<a th:href="@{/}" class="button">메인 화면으로 이동</a>
 </body>
 </html>
