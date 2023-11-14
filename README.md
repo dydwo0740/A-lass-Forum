@@ -4,9 +4,9 @@ make a simple forum server
 # Make Forum using Spring Boot
 
 ## Step 1: 게시글
-- [ ] 게시글 목록보기
-- [ ] 게시글 상세보기
-- [ ] 게시글 작성하기
+- [x] 게시글 목록보기
+- [x] 게시글 상세보기
+- [x] 게시글 작성하기
 
 ## Step 2: 댓글
 - [ ] 게시글에서 댓글 보기
