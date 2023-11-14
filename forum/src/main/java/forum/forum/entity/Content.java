@@ -22,7 +22,7 @@ public class Content {
 
     private LocalDateTime saveDate; // 작성한 시간 저장하고 싶다
 
-    @OneToMany(mappedBy = "mainContent")
+    @OneToMany(mappedBy = "mainContent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     public void addComment(Comment comment) {
